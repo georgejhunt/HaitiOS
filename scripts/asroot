@@ -1,0 +1,41 @@
+#!/bin/bash -x
+# change the activity.info files for Bridge and Tuxmath
+#sed -i -e 's/^class.*/exec = sugar-activity activity.BridgeActivity/' /home/olpc/Activities/Bridge.activity/activity/activity.info
+#sed -i -e 's/^bundle_id.*/bundle_id = org.ceibaljam.Tuxmath/' /home/olpc/Activities/Tuxmath.activity/activity/activity.info
+#sed -i -e 's/^exec.*/exec = sugar-activity activity.TuxmathStart/' /home/olpc/Activities/Tuxmath.activity/activity/activity.info
+rm -rf /home/olpc/Activities/Welcome*
+rm -rf /home/olpc/Activities/Moon*
+rm -rf /home/olpc/Activities/TamTamSynth*
+rm -rf /home/olpc/Activities/HelloWorld*
+rm -rf /home/olpc/Activities/Carte*
+
+# replace startup/shutdown images
+cp -f /media/scripts/*.png /usr/share/plymouth/themes/olpc/
+
+# change the default favorites
+cp -f /media/scripts/activities.default /usr/share/sugar/data/activities.defaults
+
+# put the mp3 libraries in place
+cp /media/binobjs/libgstmad.so /usr/lib/gstreamer-0.10
+chmod 755 /usr/lib/gstreamer-0.10/libgstmad.so
+cp /media/binobjs/libmad.so.0.2.1 /usr/lib
+ln -s /usr/lib/libmad.so.0.2.1 /usr/lib/libmad.so.0
+chmod 755 /usr/lib/libmad.so.0
+cp /media/binobjs/libgstfaad.so /usr/lib/gstreamer-0.10
+chmod 755 /usr/lib/gstreamer-0.10/libgstfaad.so
+# cp libfaad.so.2.0.0 /usr/lib - Tony
+cp /media/binobjs/libfaad.so.2 /usr/lib
+#ln -s /usr/lib/libfaad.so.2.0.0 /usr/lib/libmad.so.0/libfaad.so.2
+# chmod 755 /usr/lib/libfaad.so.2.0.0 - Tony
+chmod 755 /usr/lib/libfaad.so.2
+# for next says nothing to do
+#yum -y localinstall /media/binobjs/gstreamer-ffmpeg-0.10.13-2.fc17.i686.rpm
+ldconfig
+rm -rf /home/olpc/.gstreamer-0.10/registry.i386.bin
+
+# do the tuxpaint install that Tim has found to work
+# These versions of the rpms must be in /yumrepo/ and other dependencies must already be installed
+yum -y localinstall /media/yumrepo/libpaper-1.1.24-4.fc17.i686.rpm
+yum -y localinstall /media/yumrepo/tuxpaint-0.9.21-8.fc17.i686.rpm
+echo "asroot script finished"
+
