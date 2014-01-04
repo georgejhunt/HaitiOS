@@ -1,3 +1,25 @@
+\ proposed HaitiOS boot script
+
+visible
+
+\ step 0, stop if not an XO-1
+
+ofw-model$ drop 3 " CL1" $= 0= if
+   ." not an XO-1, turn me off" cr begin halt again
+then
+
+\ step 1, ensure firmware is updated
+
+ofw-version$ " Q2F19" $= 0= if
+   " flash u:\q2f19.rom" eval
+   \ automatically reboots
+then
+
+\ step 2, ensure operating system is updated
+" copy-nand u:\21021o0.img" eval
+
+\ step 3, boot Tiny Core Linux and run xo-custom
+
 \ olpc.fth
 visible
 .( -- Tiny Core Linux boot script for Open Firmware    ) cr
