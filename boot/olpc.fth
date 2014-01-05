@@ -35,7 +35,7 @@ then
       force-2014
    then
 ;
-?fix-clock
+\?fix-clock
 
 \ step 4, boot Tiny Core Linux and run xo-custom
 
