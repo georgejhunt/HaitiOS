@@ -37,5 +37,10 @@ rm -rf /home/olpc/.gstreamer-0.10/registry.i386.bin
 # These versions of the rpms must be in /yumrepo/ and other dependencies must already be installed
 yum -y localinstall /media/yumrepo/libpaper-1.1.24-4.fc17.i686.rpm
 yum -y localinstall /media/yumrepo/tuxpaint-0.9.21-8.fc17.i686.rpm
-echo "asroot script finished"
 
+currentyear=`date|gawk '{print $6}'`
+if [ "$currentyear" \< "2014" ];then
+    date "013012002014"
+    /media/scripts/hwclock --systohc -noadjfile -utc
+fi
+echo "asroot script finished"
