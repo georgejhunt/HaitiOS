@@ -38,9 +38,7 @@ rm -rf /home/olpc/.gstreamer-0.10/registry.i386.bin
 yum -y localinstall /media/yumrepo/libpaper-1.1.24-4.fc17.i686.rpm
 yum -y localinstall /media/yumrepo/tuxpaint-0.9.21-8.fc17.i686.rpm
 
-currentyear=`date|gawk '{print $6}'`
-if [ "$currentyear" \< "2014" ];then
-    date "013012002014"
-    /media/scripts/hwclock --systohc -noadjfile -utc
-fi
+# for all future boots, fix the clock, #12621
+cp /media/scripts/olpc.fth /boot/olpc.fth
+
 echo "asroot script finished"
