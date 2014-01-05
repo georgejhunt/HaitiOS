@@ -1,7 +1,7 @@
 \ OLPC boot script
 
 : force-2014  ( -- )  \ set the clock to a specific date and time
-   d# 19 d# 54 d# 04  d# 3 d# 01 d# 2014   ( s m h d m y )
+   d# 0 d# 0 d# 0  d# 1 d# 1 d# 2014       ( s m h d m y )
    " set-time" clock-node @ $call-method   ( )
 ;
 : get-year  ( -- year )  \ get the year only from the clock
@@ -10,6 +10,7 @@
 : ?fix-clock  ( -- )  \ set the clock if the year is obviously wrong
    get-year d# 2014 < if
       force-2014
+      visible ." warning: my clock was reset to 2014, check clock battery" cr
    then
 ;
 ?fix-clock
