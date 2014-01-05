@@ -1,0 +1,10 @@
+#!/bin/bash
+# script to create HaitiOS-lite -- without 21020O.img and wikipediafr*.xo
+set -x -e -u
+VERSION=`git describe | sed 's/^v//' | sed 's/-/./g'`
+if [ $# -gt 0 ] && [ "$1 == "lite" ]; then
+	tar zcfv ../Haiti-$VERSION.tar.gz -X exclude_list *
+else
+	tar zcfv ../Haiti-$VERSION.tar.gz *
+fi
+
