@@ -22,21 +22,7 @@ then
 \ currently opting to have this be 4 button initiated
 \" copy-nand u:\21021o0.img" eval
 
-\ step 3, set the clock if it year < 2014
-:force-2014  ( -- )  \ set the clock to a specific date and time
-   d# 19 d# 54 d# 04  d# 3 d# 01 d# 2014   ( s m h d m y )
-   " set-time" clock-node @ $call-method   ( )
-;
-: get-year  ( -- year )  \ get the year only from the clock
-   time&date 2nip 2nip nip
-;
-: ?fix-clock  ( -- )  \ set the clock if the year is obviously wrong
-   get-year d# 2014 < if
-      force-2014
-   then
-;
-\?fix-clock
-
+\ step 3, set the clock if it year < 2014 --removed
 \ step 4, boot Tiny Core Linux and run xo-custom
 
 .( -- Tiny Core Linux boot script for Open Firmware    ) cr
