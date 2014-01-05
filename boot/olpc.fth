@@ -1,4 +1,6 @@
-\ proposed HaitiOS boot script
+\ filename: olpc.fth
+\ HaitiOS boot script -- James Cameron
+\ Full source at github.com/georgejhunt/HaitiOS
 
 visible
 
@@ -11,17 +13,31 @@ then
 \ step 1, ensure firmware is updated
 
 ofw-version$ " Q2F19" $= 0= if
-   " flash u:\q2f19.rom" eval
+   " flash u:\boot\q2f19.rom" eval
    \ automatically reboots
 then
 
 \ step 2, ensure operating system is updated
-" copy-nand u:\21021o0.img" eval
+\ currently opting to have this be 4 button initiated
+\" copy-nand u:\21021o0.img" eval
+;
+\ step 3, set the clock if it year < 2014
+:force-2014  ( -- )  \ set the clock to a specific date and time
+   d# 19 d# 54 d# 04  d# 3 d# 01 d# 2014   ( s m h d m y )
+   " set-time" clock-node @ $call-method   ( )
+;
+: get-year  ( -- year )  \ get the year only from the clock
+   time&date 2nip 2nip nip
+;
+: ?fix-clock  ( -- )  \ set the clock if the year is obviously wrong
+   get-year d# 2014 < if
+      force-2014
+   then
+;
+?fix-clock
 
-\ step 3, boot Tiny Core Linux and run xo-custom
+\ step 4, boot Tiny Core Linux and run xo-custom
 
-\ olpc.fth
-visible
 .( -- Tiny Core Linux boot script for Open Firmware    ) cr
 .(    by quozl@laptop.org, 2013-07-30               -- ) cr cr
 
@@ -71,17 +87,4 @@ bundle-suffix$ b>s " SERIALTERM"   $set-macro
 " last:\boot\vmlinuz.${MACHINE}"       expand$ to boot-device
 
 cr
-:force-2014  ( -- )  \ set the clock to a specific date and time
-   d# 19 d# 54 d# 04  d# 3 d# 01 d# 2014   ( s m h d m y )
-   " set-time" clock-node @ $call-method   ( )
-;
-: get-year  ( -- year )  \ get the year only from the clock
-   time&date 2nip 2nip nip
-;
-: ?fix-clock  ( -- )  \ set the clock if the year is obviously wrong
-   get-year d# 2014 < if
-      force-2014
-   then
-;
-?fix-clock
 boot
