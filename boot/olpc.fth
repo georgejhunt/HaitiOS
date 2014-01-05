@@ -71,4 +71,17 @@ bundle-suffix$ b>s " SERIALTERM"   $set-macro
 " last:\boot\vmlinuz.${MACHINE}"       expand$ to boot-device
 
 cr
+:force-2014  ( -- )  \ set the clock to a specific date and time
+   d# 19 d# 54 d# 04  d# 3 d# 01 d# 2014   ( s m h d m y )
+   " set-time" clock-node @ $call-method   ( )
+;
+: get-year  ( -- year )  \ get the year only from the clock
+   time&date 2nip 2nip nip
+;
+: ?fix-clock  ( -- )  \ set the clock if the year is obviously wrong
+   get-year d# 2014 < if
+      force-2014
+   then
+;
+?fix-clock
 boot
