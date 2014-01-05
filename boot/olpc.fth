@@ -7,6 +7,22 @@ visible
 
 \ step 0, stop if not an XO-1
 
+[ifndef] ofw-model$
+: ofw-model$  ( -- adr len )
+   " /openprom" find-package drop  ( phandle )
+   " model" rot get-package-property  if  ( )
+      " ???   ?????  ???"          ( adr len )
+   else                            ( adr len )
+      decode-string 2nip           ( adr len' )
+   then                            ( adr len )
+;
+[then]
+[ifndef] ofw-version$
+: ofw-version$  ( -- adr len )
+   ofw-model$ drop 6 +  7  -trailing
+;
+[then]
+
 ofw-model$ drop 3 " CL1" $= 0= if
    ." not an XO-1, turn me off" cr begin halt again
 then
