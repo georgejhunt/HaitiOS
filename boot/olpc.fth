@@ -3,6 +3,7 @@
 \ Full source at github.com/georgejhunt/HaitiOS
 
 visible
+.( -- Starting HaitiOS customization --    ) cr
 
 \ step 0, stop if not an XO-1
 
