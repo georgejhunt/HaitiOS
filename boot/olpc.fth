@@ -36,7 +36,7 @@ then
 
 \ step 2, ensure operating system is updated
 \ currently opting to have this be 4 button initiated
-\ " copy-nand u:\21021o0.img" eval
+\" copy-nand u:\21021o0.img" eval
 
 \ step 3, set the clock if it year < 2014 --removed
 \ step 4, boot Tiny Core Linux and run xo-custom
