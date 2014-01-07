@@ -6,7 +6,6 @@ visible
 ." -- HaitiOS 0.6.x --" cr
 
 \ step 0, stop if not an XO-1
-
 [ifndef] ofw-model$
 : ofw-model$  ( -- adr len )
    " /openprom" find-package drop  ( phandle )
@@ -55,14 +54,15 @@ then
 
    d# 12,000 wait-until   \ Wait for EC to notice the battery
 
-   ['] ?enough-power  catch  ?dup  if
+   begin  \ wait until the power situation has been fixed
+      ['] ?enough-power  catch  ?dup
+   while
       visible
       red-letters
       ." Unsafe to update firmware now - " .error
-      ."  Continuing with old firmware" cr
       black-letters
-      exit
-   then
+      d# 1000 ms \ wait a second
+   repeat
 
    " Updating firmware" ?lease-debug-cr
 
@@ -102,7 +102,7 @@ then
 [then]
 
 : ?ht-reflash  ( -- )
-   ofw-version$ " Q2E42" $< if
+   ofw-version$ " Q2F19" $< if
       ." HaitiOS: reflashing firmware" cr
       " u:\boot\bootfw.zip" (boot-read) img$ do-firmware-update
       \ automatically reboots
@@ -125,7 +125,7 @@ then
 ;
 ?fix-clock
 
-\ step 5, boot Tiny Core Linux and run xo-custom
+\ step 3, boot Tiny Core Linux and run xo-custom
 
 \ set kernel command line
 " fbcon=font:SUN12x22 superuser quiet showapps multivt waitusb=5 nozswap console=ttyS0,115200 console=tty0 xo-custom" to boot-file
