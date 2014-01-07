@@ -37,6 +37,7 @@ then
 
 \ step 2, make sure user wants to destroy all data
 
+flush-keyboard
 ." HaitiOS: press 'y' to erase this laptop and install HaitiOS: "
 begin  key  [char] y  =  until  .( y) cr
 
