@@ -54,14 +54,15 @@ then
 
    d# 12,000 wait-until   \ Wait for EC to notice the battery
 
-   ['] ?enough-power  catch  ?dup  if
+   begin  \ wait until the power situation has been fixed
+      ['] ?enough-power  catch  ?dup
+   while
       visible
       red-letters
       ." Unsafe to update firmware now - " .error
-      ."  Continuing with old firmware" cr
       black-letters
-      exit
-   then
+      d# 1000 ms \ wait a second
+   repeat
 
    " Updating firmware" ?lease-debug-cr
 
