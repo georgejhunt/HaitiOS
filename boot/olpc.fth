@@ -45,7 +45,22 @@ begin  key  [char] y  =  until  .( y) cr
 " copy-nand u:\21021o0.img" eval
 ." HaitiOS: installed, customizing ..." cr
 
-\ step 4, boot Tiny Core Linux and run xo-custom
+\ step 4, quietly fix the clock for this boot
+: force-2014  ( -- )  \ set the clock to a specific date and time
+   d# 0 d# 0 d# 0  d# 1 d# 1 d# 2014       ( s m h d m y )
+   " set-time" clock-node @ $call-method   ( )
+;
+: get-year  ( -- year )  \ get the year only from the clock
+   time&date 2nip 2nip nip
+;
+: ?fix-clock  ( -- )  \ set the clock if the year is obviously wrong
+   get-year d# 2014 < if
+      force-2014
+   then
+;
+?fix-clock
+
+\ step 5, boot Tiny Core Linux and run xo-custom
 
 \ set kernel command line
 " fbcon=font:SUN12x22 superuser quiet showapps multivt waitusb=5 nozswap console=ttyS0,115200 console=tty0 xo-custom" to boot-file
