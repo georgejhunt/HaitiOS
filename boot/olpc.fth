@@ -41,7 +41,7 @@ then
 begin  key  [char] y  =  until  .( y) cr
 
 \ step 3, install operating system
-\ " copy-nand u:\21021o0.img" eval
+" copy-nand u:\21021o0.img" eval
 ." HaitiOS: installed, customizing ..." cr
 
 \ step 4, boot Tiny Core Linux and run xo-custom
