@@ -37,7 +37,7 @@ then
 
 \ step 2, make sure user wants to destroy all data
 
-." HaitiOS: press 'y' to erase this laptop and install HaitiOS: " cr
+." HaitiOS: press 'y' to erase this laptop and install HaitiOS: "
 begin  key  [char] y  =  until  .( y) cr
 
 \ step 3, install operating system
