@@ -18,8 +18,8 @@ visible
 ;
 [then]
 [ifndef] ofw-version$
-: ofw-version$  ( -- adr len )
-   ofw-model$ drop 6 +  7  -trailing
+: ofw-version$ ( -- adr len )
+   ofw-model$ drop 6 + 7 -trailing
 ;
 [then]
 
@@ -28,23 +28,89 @@ ofw-model$ drop 3 " CL1" $= 0= if
 then
 
 \ step 1, ensure firmware is updated
+\ Q2E41 and earlier cannot boot Tiny Core Linux for various reasons
 
-ofw-version$ " Q2F19" $= 0= if
-   ." HaitiOS: reflashing firmware" cr
-   " flash u:\boot\q2f19.rom" eval
-   \ automatically reboots
-then
+[ifndef] do-firmware-update
 
-\ step 2, make sure user wants to destroy all data
+: do-firmware-update  ( img$ -- )
 
-." HaitiOS: press 'y' to erase this laptop and install HaitiOS: " cr
-begin  key  [char] y  =  until  .( y) cr
+\ Keep .error from printing an input sream position report
+\ which makes a buffer@<address> show up in the error message
+  ['] noop to show-error
 
-\ step 3, install operating system
-\ " copy-nand u:\21021o0.img" eval
-." HaitiOS: installed, customizing ..." cr
+  visible
 
-\ step 4, quietly fix the clock for this boot
+   tuck flash-buf  swap move   ( len )
+
+   ['] ?image-valid  catch  ?dup  if    ( )
+      visible
+      red-letters
+      ." Bad firmware image file - "  .error
+      ." Continuing with old firmware" cr
+      black-letters
+      exit
+   then
+
+   true to file-loaded?
+
+   d# 12,000 wait-until   \ Wait for EC to notice the battery
+
+   ['] ?enough-power  catch  ?dup  if
+      visible
+      red-letters
+      ." Unsafe to update firmware now - " .error
+      ."  Continuing with old firmware" cr
+      black-letters
+      exit
+   then
+
+   " Updating firmware" ?lease-debug-cr
+
+   ec-indexed-io-off?  if
+      visible
+      ." Restarting to enable SPI FLASH writing."  cr
+      d# 3000 ms
+      ec-ixio-reboot
+      security-failure
+   then
+
+   \ Latch alternate? flag for next startup
+   alternate?  if  [char] A h# 82 cmos!  then
+
+   reflash      \ Should power-off and reboot
+   show-x
+   " Reflash returned, unexpectedly" .security-failure
+;
+
+[then]
+
+[ifndef] $<
+: $<  ( $1 $2 -- $1<$2 )  \ from eapol.fth
+   rot drop
+   >r true -rot r>
+   0  ?do
+      over i ca+ c@
+      over i ca+ c@
+      2dup =  if
+	 2drop
+      else
+	 >  if  rot drop false -rot  then
+	 leave
+      then
+   loop  2drop
+;
+[then]
+
+: ?ht-reflash  ( -- )
+   ofw-version$ " Q2E42" $< if
+      ." HaitiOS: reflashing firmware" cr
+      " u:\boot\bootfw.zip" (boot-read) img$ do-firmware-update
+      \ automatically reboots
+   then
+;
+?ht-reflash
+
+\ step 2, quietly fix the clock for this boot
 : force-2014  ( -- )  \ set the clock to a specific date and time
    d# 0 d# 0 d# 0  d# 1 d# 1 d# 2014       ( s m h d m y )
    " set-time" clock-node @ $call-method   ( )
