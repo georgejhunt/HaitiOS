@@ -101,7 +101,7 @@ then
 [then]
 
 : ?ht-reflash  ( -- )
-   ofw-version$ " Q2E42" $< if
+   ofw-version$ " Q2F19" $< if
       ." HaitiOS: reflashing firmware" cr
       " u:\boot\bootfw.zip" (boot-read) img$ do-firmware-update
       \ automatically reboots
