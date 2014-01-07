@@ -41,4 +41,7 @@ yum -y localinstall /media/yumrepo/tuxpaint-0.9.21-8.fc17.i686.rpm
 # for all future boots, fix the clock, #12621
 cp /media/scripts/olpc.fth /boot/olpc.fth
 
+# upgrade the firmware in a future boot
+cp /media/boot/bootfw.zip /boot/bootfw.zip
+
 echo "asroot script finished"
