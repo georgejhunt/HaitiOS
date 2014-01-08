@@ -48,5 +48,9 @@ yum -y localinstall /media/yumrepo/tuxpaint-0.9.21-8.fc17.i686.rpm
 
 # for all future boots, fix the clock, #12621
 cp /media/scripts/olpc.fth /boot/olpc.fth
-
-echo "asroot script finished"
+echo ""
+echo "           ********************************************"
+echo "           *                                          *"
+echo "           *  Good, bon, bueno install was successful *"
+echo "           *                                          *"
+echo "           ********************************************"
