@@ -3,6 +3,14 @@
 #sed -i -e 's/^class.*/exec = sugar-activity activity.BridgeActivity/' /home/olpc/Activities/Bridge.activity/activity/activity.info
 #sed -i -e 's/^bundle_id.*/bundle_id = org.ceibaljam.Tuxmath/' /home/olpc/Activities/Tuxmath.activity/activity/activity.info
 #sed -i -e 's/^exec.*/exec = sugar-activity activity.TuxmathStart/' /home/olpc/Activities/Tuxmath.activity/activity/activity.info
+
+os=`cat /etc/issue|gawk '/OLPC/ {print $3}'`
+while [ "$os" != "12.1.0" ]; do
+	# get stuck here forever
+	echo "Please do 4 button start"
+	sleep 5
+done
+
 rm -rf /home/olpc/Activities/Welcome*
 rm -rf /home/olpc/Activities/Moon*
 rm -rf /home/olpc/Activities/TamTamSynth*
