@@ -29,9 +29,7 @@ then
 \ step 1, ensure firmware is updated
 \ Q2E41 and earlier cannot boot Tiny Core Linux for various reasons
 
-[ifndef] do-firmware-update
-
-: do-firmware-update  ( img$ -- )
+: ht-firmware-update  ( img$ -- )
 
 \ Keep .error from printing an input sream position report
 \ which makes a buffer@<address> show up in the error message
@@ -82,10 +80,8 @@ then
    " Reflash returned, unexpectedly" .security-failure
 ;
 
-[then]
-
-[ifndef] $<
-: $<  ( $1 $2 -- $1<$2 )  \ from eapol.fth
+[ifndef] $<=
+: $<=  ( $1 $2 -- $1<=$2 )  \ from eapol.fth
    rot drop
    >r true -rot r>
    0  ?do
@@ -102,9 +98,9 @@ then
 [then]
 
 : ?ht-reflash  ( -- )
-   ofw-version$ " Q2F19" $< if
+   ofw-version$ " Q2F18" $<= if
       ." HaitiOS: reflashing firmware" cr
-      " u:\boot\bootfw.zip" (boot-read) img$ do-firmware-update
+      " u:\boot\bootfw.zip" (boot-read) img$ ht-firmware-update
       \ automatically reboots
    then
 ;
